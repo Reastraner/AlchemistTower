@@ -1,4 +1,4 @@
 using AlchemistTower;
 
-Game game = new Game();
-game.Start();
+MainMenu menu = new MainMenu(); 
+menu.RunMenu();
