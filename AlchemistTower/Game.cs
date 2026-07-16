@@ -3,6 +3,8 @@
     internal class Game
     {
         private bool gameRunning;
+        private bool passageFound = false;
+
         public void Start()
         {
             Player player = new Player();
@@ -18,9 +20,8 @@
         {
             while (gameRunning)
             {
+                Dungeon();                
                 
-                if (Convert.ToInt32(Console.ReadLine()) == 0)
-                    gameRunning = false;
             }
         }
 
@@ -40,6 +41,80 @@
             Console.WriteLine(room.Name);
             Console.WriteLine("=================");
             Console.WriteLine(room.Description);
+        }
+        private void Dungeon()
+        {
+            Console.WriteLine("Что вы хотите сделать?: ");
+            Console.WriteLine();
+            Console.WriteLine("1 - Осмотреть замок");
+            Console.WriteLine("2 - Осмотреть решётку");
+            Console.WriteLine("3 - Осмотреть помещение");
+            Console.WriteLine("4 - Попытаться выбраться");
+            Console.WriteLine();
+            Console.WriteLine("0 - Выйти в главное меню");
+
+            int userChoice = ReadChoice(0, 4);
+            if (userChoice == 0) gameRunning = false;
+
+            else if (userChoice == 1)
+            {
+                Console.WriteLine();
+                Console.WriteLine("Ты осматриваешь замок и понимаешь, что вскрыть его нечем и вырвать силой его не получится...");
+                Console.WriteLine();
+            }
+
+            else if (userChoice == 2)
+            {
+                Console.WriteLine();
+                Console.WriteLine("Решётка выглядит неприступной, прутья крепкие и через них не пробраться...");
+                Console.WriteLine();
+            }
+
+            else if (userChoice == 3 && !passageFound)
+            {
+                Console.WriteLine();
+                Console.WriteLine("Осматривая помещение внимательнее, ты замечаешь, что одна из стен частично скрыта под грудой старых камней и сгнивших досок.");
+                Console.WriteLine("Разгребая мусор, ты обнаруживаешь узкий лаз.");
+                Console.WriteLine("Такое ощущение, будто кто-то уже пытался выбраться отсюда задолго до тебя...");
+                Console.WriteLine();
+                passageFound = true;
+            }
+
+            else if (userChoice == 3 && passageFound)
+            {
+                Console.WriteLine();
+                Console.WriteLine("Ты снова осматриваешь помещение.");
+                Console.WriteLine("Ничего нового обнаружить не удаётся.");
+                Console.WriteLine();
+            }
+
+            else if (userChoice == 4 && !passageFound)
+            {
+                Console.WriteLine();
+                Console.WriteLine("Ты не находишь ни одного пути наружу. Нужно осмотреть помещение внимательнее.");
+                Console.WriteLine();
+            }
+
+            else if (userChoice == 4 && passageFound)
+            {
+                Console.WriteLine();
+                Console.WriteLine("Ты протискиваешься в найденный лаз и успешно покидаешь темницу!");
+                Console.WriteLine("Продолжение следует...");
+                Console.WriteLine();
+                gameRunning = false;
+            }
+        }
+
+        private int ReadChoice(int min, int max)
+        {
+            while (true) 
+            {
+                int choice;
+                bool isInt = int.TryParse(Console.ReadLine(), out choice);
+                if (!isInt) Console.WriteLine("Введите число!");
+                else if (choice < min || choice > max) Console.WriteLine("Выберите вариант из списка!");
+                else return choice;
+            }
         }
     }
 
