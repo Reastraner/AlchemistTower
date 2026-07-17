@@ -4,12 +4,12 @@
     {
         private bool gameRunning;
         private bool passageFound = false;
+        private string currentLocation = "Dungeon";
 
         public void Start()
         {
             Player player = new Player();
             gameRunning = true;
-            Console.WriteLine("Добро пожаловать в башню алхимика!");
             ShowIntro();
             Room dungeon = new Room("Темница", "Темница встречает тебя холодом и тяжёлой сыростью.\r\n\r\nНеровные каменные стены блестят от воды, а в углах копится густая темнота. За проржавевшей решёткой тянется узкий проход, уходящий куда-то в глубь башни.\r\n\r\nНа полу лежат обломки старых цепей. Судя по слою пыли, ими давно никто не пользовался.\r\n\r\nОткуда-то сверху доносится едва слышный гул.");
             ShowRoom(dungeon);
@@ -20,8 +20,14 @@
         {
             while (gameRunning)
             {
-                Dungeon();                
-                
+                if (currentLocation == "Dungeon")
+                {
+                    Dungeon();
+                }               
+                else if (currentLocation == "CaveEntrance")
+                {
+                    CaveEntrance();
+                }
             }
         }
 
@@ -41,6 +47,7 @@
             Console.WriteLine(room.Name);
             Console.WriteLine("=================");
             Console.WriteLine(room.Description);
+            Console.WriteLine();
         }
         private void Dungeon()
         {
@@ -101,6 +108,42 @@
                 Console.WriteLine("Ты протискиваешься в найденный лаз и успешно покидаешь темницу!");
                 Console.WriteLine("Продолжение следует...");
                 Console.WriteLine();
+                currentLocation = "CaveEntrance";
+            }
+        }
+
+        private void CaveEntrance()
+        {
+            Console.Clear();
+
+            Room cave = new Room("Пещера","Узкий тоннель выводит тебя в сырую подземную пещеру...");
+            ShowRoom(cave);
+
+            Console.WriteLine("Твой выбор: ");
+            Console.WriteLine();
+            Console.WriteLine("1 - Идти дальше");
+            Console.WriteLine("2 - Осмотреться");
+            Console.WriteLine();
+            Console.WriteLine("0 - Выход");
+
+
+            int userChoice = ReadChoice(0, 3);
+
+            if (userChoice == 0)
+            {
+                gameRunning = false;
+            }
+            else if (userChoice == 1)
+            {
+                gameRunning = false;
+            }
+            else if (userChoice == 2)
+            {
+                gameRunning = false;
+            }
+            else if (userChoice == 3)
+            {
+                Console.WriteLine("Пасхалка, сука!");
                 gameRunning = false;
             }
         }
