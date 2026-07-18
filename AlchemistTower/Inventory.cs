@@ -1,10 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace AlchemistTower
+﻿namespace AlchemistTower
 {
     internal class Inventory
     {
+        private List<Item> items;
+
+        public Inventory()
+        {
+            items = new List<Item>();
+        }
     }
 }
