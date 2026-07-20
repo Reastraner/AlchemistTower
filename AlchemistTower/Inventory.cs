@@ -7,10 +7,11 @@
         public Inventory()
         {
             items = new List<Item>();
-            void AddItem(Item item)
-            {
-                items.Add(item);
-            }
+
+        }
+        public void AddItem(Item item)
+        {
+            items.Add(item);
         }
 
         public void ShowInventory()

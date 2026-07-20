@@ -4,6 +4,7 @@
     {
         private bool gameRunning;
         private bool passageFound = false;
+        private bool keyFound = false;
         private string currentLocation = "Dungeon";
         private Player player;
 
@@ -65,6 +66,7 @@
             Console.WriteLine("3 - Осмотреть помещение");
             Console.WriteLine("4 - Попытаться выбраться");
             Console.WriteLine();
+            Console.WriteLine("9 - Инвентарь");
             Console.WriteLine("0 - Выйти в главное меню");
 
             int userChoice = ReadChoice(0, 4);
@@ -137,6 +139,7 @@
             Console.WriteLine("1 - Идти дальше");
             Console.WriteLine("2 - Осмотреться");
             Console.WriteLine();
+            Console.WriteLine("9 - Инвентарь");
             Console.WriteLine("0 - Выход");
 
 
@@ -178,6 +181,7 @@
             Console.WriteLine("1 - Зайти в башню");
             Console.WriteLine("2 - Осмотреться");
             Console.WriteLine();
+            Console.WriteLine("9 - Инвентарь");
             Console.WriteLine("0 - Выход");
 
             int userChoice = ReadChoice(0,2);
@@ -201,6 +205,19 @@
                 Console.WriteLine("Башня выглядит заброшенной, но изнутри доносится едва различимый металлический звон.");
                 Console.WriteLine("Обойти её снаружи невозможно: отвесные скалы окружают строение со всех сторон.");
                 Console.WriteLine();
+
+                if (!keyFound)
+                {
+                    Item key = new Item("Ключ","Огромный ключ, на котором начертаны руны, от чего же он?");
+                    player.Inventory.AddItem(key);
+                    keyFound = true;
+                    Console.WriteLine($"В кусте неподалёку ты находишь {key.Name}");
+                }
+                else
+                {
+                    Console.WriteLine("Ты осматриваешь другие кусты, но в них пусто");
+                } 
+
                 Pause();
             }
         }
@@ -217,6 +234,7 @@
             Console.WriteLine("1 - Подняться к шпилю");
             Console.WriteLine("2 - Осмотреть зал");
             Console.WriteLine();
+            Console.WriteLine("9 - Инвентарь");
             Console.WriteLine("0 - Выход");
 
             int userChoice = ReadChoice(0, 2);
@@ -250,6 +268,12 @@
                 int choice;
                 bool isInt = int.TryParse(Console.ReadLine(), out choice);
                 if (!isInt) Console.WriteLine("Введите число!");
+                else if(choice == 9)
+                {
+                    player.Inventory.ShowInventory();
+                    Pause();
+                    continue;
+                }
                 else if (choice < min || choice > max) Console.WriteLine("Выберите вариант из списка!");
                 else return choice;
             }
