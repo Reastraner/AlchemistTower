@@ -7,6 +7,8 @@
         private bool keyFound = false;
         private string currentLocation = "Dungeon";
         private Player player;
+        int alchemistDialogueStage = 0;
+        bool weaknessFound;
 
         public void Start()
         {
@@ -31,6 +33,7 @@
                 }
                 else if (currentLocation == "TowerEntrance") TowerEntrance();
                 else if (currentLocation == "Tower") Tower();
+                else if (currentLocation == "Spire") Spire();
             }
         }
 
@@ -245,10 +248,23 @@
             }
             else if (userChoice == 1)
             {
-                Console.WriteLine();
-                Console.WriteLine("Дверь, ведущая наверх, заперта. В замочной скважине виден необычный механизм.");
-                Console.WriteLine();
-                Pause();
+                if (player.Inventory.HasItem("Ключ"))
+                {
+                    Console.WriteLine();
+                    Console.WriteLine("Ты вставляешь ключ в замочную скважину и повернув его попадаешь в лифт, который начинает медленно ползти вверх...");
+                    Console.WriteLine();
+                    Pause();
+
+                    currentLocation = "Spire";
+                }
+                else
+                {
+                    Console.WriteLine();
+                    Console.WriteLine("Дверь, ведущая наверх, заперта. В замочной скважине виден необычный механизм.");
+                    Console.WriteLine();
+                    Pause();
+                }
+                
             }
             else if (userChoice == 2)
             {
@@ -259,7 +275,107 @@
             }
         }
 
+        private void Spire()
+        {
+            Console.Clear();
 
+            Room spire = new Room("Шпиль башни", "Высоко под сводами башни раскинулся просторный зал. Тусклый свет проникает сквозь узкие окна, выхватывая из полумрака столы, стеклянные сосуды и сложные механизмы. В глубине помещения стоит незнакомый мужчина, спокойно наблюдающий за тобой.\r\n");
+            ShowRoom(spire);
+
+            Console.WriteLine("Твой выбор:");
+            Console.WriteLine();
+            Console.WriteLine("1 - Поговорить");
+            Console.WriteLine("2 - Осмотреть помещение");
+            if (alchemistDialogueStage >= 7)
+            {
+                Console.WriteLine("3 - Остаться с алхимиком");
+            }
+            Console.WriteLine();
+            Console.WriteLine("9 - Инвентарь");
+            Console.WriteLine("0 - Выход");
+            Console.WriteLine();
+
+            int maxChoice = alchemistDialogueStage >= 7 ? 3 : 2;
+            int userChoice = ReadChoice(0, maxChoice);
+            
+            if (userChoice == 0)
+                gameRunning = false;
+            else if (userChoice == 1) 
+            {
+                if (alchemistDialogueStage == 0)
+                {
+                    Console.WriteLine("Мужчина медленно откладывает инструмент и смотрит на тебя.");
+                    Console.WriteLine("— Ты всё-таки добрался.");
+                    Pause();
+                    alchemistDialogueStage += 1;
+                }
+                else if (alchemistDialogueStage == 1)
+                {
+                    Console.WriteLine("- Судя по твоему взгляду, ты не помнишь меня?");
+                    Console.WriteLine("Мужчина едва заметно усмехается");
+                    Console.WriteLine("- Меня называют Алхимиком. Я хозяин этой башни и прилегающих территорий");
+                    Pause();
+                    alchemistDialogueStage++;
+                }
+                else if (alchemistDialogueStage == 2)
+                {
+                    Console.WriteLine("Алхимик замечает немой вопрос в твоих глазах.");
+                    Console.WriteLine("- Да, это я тот, кто запер тебя внизу");
+                    Pause();
+                    alchemistDialogueStage++;
+                }
+                else if (alchemistDialogueStage == 3)
+                {
+                    Console.WriteLine("- И как всегда, ненадолго.");
+                    Console.WriteLine("Алхимик медленно переводит взляд на механизм в глубине зала");
+                    Console.WriteLine("- Ты всегда находишь чертов путь сюда.");
+                    Pause();
+                    alchemistDialogueStage++;
+                }
+                else if (alchemistDialogueStage == 4)
+                {
+                    Console.WriteLine("- Думаешь, ты почти выбрался, вот она свобода? Только руку протяни.");
+                    Console.WriteLine("Алхимик смотрит на тебя почти с сожалением.");
+                    Console.WriteLine("- Но уверен ли ты, что имено её ты ищешь?");
+                    Pause();
+                    alchemistDialogueStage++;
+                }
+                else if (alchemistDialogueStage == 5)
+                {
+                    Console.WriteLine("- Я мог бы снова запереть тебя внизу.");
+                    Console.WriteLine("Алхимик ненадолго замолкает");
+                    Console.WriteLine("- Но есть ли в этом смысл? Я дам этот выбор тебе.");
+                    Pause();
+                    alchemistDialogueStage++;
+                }
+                else if (alchemistDialogueStage == 6)
+                {
+                    Console.WriteLine("- Выбор за тобой остаться здесь или сгнить в темнице.");
+                    Console.WriteLine("Алхимик отворачивается к механизму");
+                    Console.WriteLine("- Я не позволю еще раз обнулить мир...");
+                    Pause();
+                    alchemistDialogueStage++;
+                }
+                else if (alchemistDialogueStage == 7)
+                {
+                    Console.WriteLine("- Мне больше нечего тебе сказать...");
+                    Pause();
+                }
+
+            }
+            else if (userChoice == 2)
+            {
+                Console.WriteLine("Ты внимательно осматриваешь помещение");
+                Pause();
+            }
+            else if (userChoice == 3)
+            {
+                Console.Clear();
+                GoodEnding();
+                Pause();
+                gameRunning = false;
+            }
+        }
 
         private int ReadChoice(int min, int max)
         {
@@ -285,6 +401,20 @@
             Console.WriteLine("Нажмите любую клавишу...");
             Console.ReadKey(true);
         }
+        
+        private void GoodEnding()
+        {
+            Console.WriteLine("Ты медленно отходишь от механизма.");
+            Console.WriteLine("Алхимик наблюдает за тобой, словно до последнего ожидая знакомого движения — рывка к порталу, удара по стеклу, очередной попытки вырваться.");
+            Console.WriteLine("Но ты остаёшься на месте");
+            Console.WriteLine("Впервые его лицо меняется. Не улыбка и не облегчение — лишь едва заметно исчезнувшее напряжение.");
+            Console.WriteLine("— Значит, в этот раз всё будет иначе, — тихо произносит Алхимик.");
+            Console.WriteLine("Он поворачивается к механизму, и золотистый свет внутри сосудов постепенно гаснет.");
+            Console.WriteLine("Где-то далеко за стенами башни раздаётся глухой грохот. Мир продолжает существовать — хрупкий, израненный, но всё ещё живой.");
+            Console.WriteLine("Ты не вспомнил, кем был.");
+            Console.WriteLine("Но впервые сам решил, кем не станешь.");
+            Console.WriteLine();
+            Console.WriteLine("Истинная концовка: Разорванный цикл");
+        }
     }
-
 }
