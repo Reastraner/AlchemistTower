@@ -3,12 +3,14 @@
     internal class Game
     {
         private bool gameRunning;
-        private bool passageFound = false;
-        private bool keyFound = false;
+        private bool passageFound;
+        private bool keyFound;
+        private bool weaknessFound;
+
+        private int alchemistDialogueStage;
         private string currentLocation = "Dungeon";
+        
         private Player player;
-        int alchemistDialogueStage = 0;
-        bool weaknessFound;
 
         public void Start()
         {

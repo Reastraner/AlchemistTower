@@ -2,13 +2,8 @@
 {
     internal class Inventory
     {
-        private List<Item> items;
+        private readonly List<Item> items = new();
 
-        public Inventory()
-        {
-            items = new List<Item>();
-
-        }
         public void AddItem(Item item)
         {
             items.Add(item);

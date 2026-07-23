@@ -2,11 +2,6 @@
 {
     internal class Player
     {
-        public Inventory Inventory { get; }
-
-        public Player()
-        {
-            Inventory = new Inventory();
-        }
+        public Inventory Inventory { get; } = new();
     }
 }
