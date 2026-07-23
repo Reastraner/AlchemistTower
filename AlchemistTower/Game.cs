@@ -8,7 +8,7 @@
         private bool weaknessFound;
 
         private int alchemistDialogueStage;
-        private string currentLocation = "Dungeon";
+        private Location currentLocation = Location.Dungeon;
         
         private Player player;
 
@@ -25,17 +25,32 @@
         {
             while (gameRunning)
             {
-                if (currentLocation == "Dungeon")
+                switch (currentLocation)
                 {
-                    Dungeon();
+                    case Location.Dungeon:
+                        Dungeon();
+                        break;
+
+                    case Location.CaveEntrance:
+                        CaveEntrance();
+                        break;
+                    
+                    case Location.TowerEntrance:
+                        TowerEntrance();
+                        break;
+                    
+                    case Location.Tower:
+                        Tower();
+                        break;
+
+                    case Location.Spire:
+                        Spire();
+                        break;
+
+                    default:
+                        gameRunning = false;
+                        break;
                 }
-                else if (currentLocation == "CaveEntrance")
-                {
-                    CaveEntrance();
-                }
-                else if (currentLocation == "TowerEntrance") TowerEntrance();
-                else if (currentLocation == "Tower") Tower();
-                else if (currentLocation == "Spire") Spire();
             }
         }
 
@@ -128,7 +143,7 @@
                 Console.WriteLine();
                 Pause();
 
-                currentLocation = "CaveEntrance";
+                currentLocation = Location.CaveEntrance;
             }
         }
 
@@ -158,7 +173,7 @@
             {
                 Console.WriteLine("Ты долго идешь вперед, в конце пути тебя поджидает огромных размеров дверь, что же за ней...");
                 Pause();
-                currentLocation = "TowerEntrance";
+                currentLocation = Location.TowerEntrance;
             }
             else if (userChoice == 2)
             {
@@ -197,7 +212,7 @@
                 Console.WriteLine();
                 Pause();
 
-                currentLocation = "Tower";
+                currentLocation = Location.Tower;
             }
             else if (userChoice == 2)
             {
@@ -252,7 +267,7 @@
                     Console.WriteLine();
                     Pause();
 
-                    currentLocation = "Spire";
+                    currentLocation = Location.Spire;
                 }
                 else
                 {
