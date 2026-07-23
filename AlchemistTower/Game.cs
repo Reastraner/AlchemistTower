@@ -146,7 +146,7 @@
             Console.WriteLine("0 - Выход");
 
 
-            int userChoice = ReadChoice(0, 3);
+            int userChoice = ReadChoice(0, 2);
 
             if (userChoice == 0)
             {
@@ -163,11 +163,6 @@
                 Console.WriteLine();
                 Console.WriteLine("Кроме влажных стен, камней и следов давно высохшей воды ты ничего полезного не находишь.");
                 Console.WriteLine();
-                Pause();
-            }
-            else if (userChoice == 3)
-            {
-                Console.WriteLine("Пасхалка, сука!");
                 Pause();
             }
         }
@@ -286,16 +281,29 @@
             Console.WriteLine();
             Console.WriteLine("1 - Поговорить");
             Console.WriteLine("2 - Осмотреть помещение");
-            if (alchemistDialogueStage >= 7)
+            int maxChoice = 2;
+            if (alchemistDialogueStage >= 7 && !weaknessFound)
             {
+                maxChoice = 3;
                 Console.WriteLine("3 - Остаться с алхимиком");
+            }
+
+            else if (alchemistDialogueStage < 7 && weaknessFound)
+            {
+                maxChoice = 3;
+                Console.WriteLine("3 - Разрушить установку");
+            }
+            else if (alchemistDialogueStage >= 7 && weaknessFound)
+            {
+                maxChoice = 4;
+                Console.WriteLine("3 - Остаться с алхимиком");
+                Console.WriteLine("4 - Разрушить установку");
             }
             Console.WriteLine();
             Console.WriteLine("9 - Инвентарь");
             Console.WriteLine("0 - Выход");
             Console.WriteLine();
 
-            int maxChoice = alchemistDialogueStage >= 7 ? 3 : 2;
             int userChoice = ReadChoice(0, maxChoice);
             
             if (userChoice == 0)
@@ -365,13 +373,43 @@
             }
             else if (userChoice == 2)
             {
-                Console.WriteLine("Ты внимательно осматриваешь помещение");
-                Pause();
+                if (!weaknessFound)
+                {
+                    Console.WriteLine("Ты внимательно осматриваешь помещение. Прямо рядом с тобой находится установка, в которой пульсирует жидкость неизвестного происхождения.");
+                    Console.WriteLine("Одна колба вся покрыта трещинами, достаточно лишь чуть сильнее ударить по ней и весь цикл работы установки будет нарушен...");    
+                    weaknessFound = true;
+                    Pause();
+                }
+                else
+                {
+                    Console.WriteLine("Взгляд нервно мечется из стороны в сторону, но больше ничего, что могло бы тебе помочь, ты не замечаешь");
+                    Pause();
+                }
+                
             }
             else if (userChoice == 3)
             {
+                if (alchemistDialogueStage >= 7)
+                {
+                    Console.Clear();
+                    TrueEnding();
+                    Pause();
+                    gameRunning = false;
+                }
+                else if (weaknessFound)
+                {
+                    Console.Clear();
+                    FalseEnding();
+                    Pause();
+                    gameRunning = false;
+                }
+                
+            }
+
+            else if (userChoice == 4)
+            {
                 Console.Clear();
-                GoodEnding();
+                FalseEnding();
                 Pause();
                 gameRunning = false;
             }
@@ -402,7 +440,7 @@
             Console.ReadKey(true);
         }
         
-        private void GoodEnding()
+        private void TrueEnding()
         {
             Console.WriteLine("Ты медленно отходишь от механизма.");
             Console.WriteLine("Алхимик наблюдает за тобой, словно до последнего ожидая знакомого движения — рывка к порталу, удара по стеклу, очередной попытки вырваться.");
@@ -415,6 +453,38 @@
             Console.WriteLine("Но впервые сам решил, кем не станешь.");
             Console.WriteLine();
             Console.WriteLine("Истинная концовка: Разорванный цикл");
+        }
+
+        private void FalseEnding()
+        {
+            Console.WriteLine("Ты резко бросаешься к установке.");
+            Console.WriteLine("Алхимик успевает лишь повернуться, когда твой удар обрушивается на повреждённую колбу.");
+            Console.WriteLine("Стекло разлетается с оглушительным треском.");
+            Console.WriteLine("Густая золотистая жидкость выплёскивается наружу, и механизм начинает содрогаться. Свет внутри сосудов вспыхивает так ярко, что на мгновение ослепляет тебя.");
+            Console.WriteLine("— Нет! — впервые в голосе Алхимика звучит настоящий страх.");
+            Console.WriteLine("Он бросается к установке, пытаясь остановить разрушение, но уже слишком поздно.");
+            Console.WriteLine("Одна за другой лопаются колбы. Металлические детали срываются с креплений, а по стенам башни проходят глубокие трещины.");
+            Console.WriteLine("В центре зала возникает ослепительный разлом.");
+            Console.WriteLine("За ним ты видишь открытое небо.");
+            Console.WriteLine("Свободу.");
+            Console.WriteLine("Не раздумывая, ты шагаешь внутрь.");
+            Console.WriteLine("На мгновение всё исчезает.");
+            Console.WriteLine("Когда зрение возвращается, ты стоишь посреди бескрайней равнины.");
+            Console.WriteLine("Чёрный пепел медленно падает с серого неба. Вокруг возвышаются обломки городов, а среди руин неподвижно бродят искалеченные человеческие оболочки.");
+            Console.WriteLine("Ни голосов.");
+            Console.WriteLine("Ни ветра.");
+            Console.WriteLine("Ни единого признака настоящей жизни.");
+            Console.WriteLine("Где-то далеко за твоей спиной раздаётся последний грохот рушащейся башни.");
+            Console.WriteLine("И тогда ты начинаешь вспоминать.");
+            Console.WriteLine("Не всё — лишь отдельные образы.");
+            Console.WriteLine("Удар.");
+            Console.WriteLine("Разбитое стекло.");
+            Console.WriteLine("Ослепительный свет.");
+            Console.WriteLine("Этот мёртвый мир.");
+            Console.WriteLine("Ты уже стоял здесь.");
+            Console.WriteLine("Много раз.");
+            Console.WriteLine();
+            Console.WriteLine("Ложная концовка: Свобода");
         }
     }
 }
