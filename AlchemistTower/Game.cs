@@ -289,6 +289,9 @@
 
         private void Spire()
         {
+            bool dialogueCompleted = alchemistDialogueStage >= 7;
+            bool mechanismCanBeDestroyed = weaknessFound;
+
             Console.Clear();
 
             Room spire = new Room("Шпиль башни", "Высоко под сводами башни раскинулся просторный зал. Тусклый свет проникает сквозь узкие окна, выхватывая из полумрака столы, стеклянные сосуды и сложные механизмы. В глубине помещения стоит незнакомый мужчина, спокойно наблюдающий за тобой.\r\n");
@@ -299,22 +302,18 @@
             Console.WriteLine("1 - Поговорить");
             Console.WriteLine("2 - Осмотреть помещение");
             int maxChoice = 2;
-            if (alchemistDialogueStage >= 7 && !weaknessFound)
+            if (dialogueCompleted)
             {
                 maxChoice = 3;
                 Console.WriteLine("3 - Остаться с алхимиком");
             }
 
-            else if (alchemistDialogueStage < 7 && weaknessFound)
+            if (mechanismCanBeDestroyed)
             {
-                maxChoice = 3;
-                Console.WriteLine("3 - Разрушить установку");
-            }
-            else if (alchemistDialogueStage >= 7 && weaknessFound)
-            {
-                maxChoice = 4;
-                Console.WriteLine("3 - Остаться с алхимиком");
-                Console.WriteLine("4 - Разрушить установку");
+                maxChoice = dialogueCompleted ? 4 : 3;
+
+                int destroyChoice = dialogueCompleted ? 4 : 3;
+                Console.WriteLine($"{destroyChoice} - Разрушить установку");
             }
             Console.WriteLine();
             Console.WriteLine("9 - Инвентарь");
@@ -323,113 +322,128 @@
 
             int userChoice = ReadChoice(0, maxChoice);
             
-            if (userChoice == 0)
-                gameRunning = false;
-            else if (userChoice == 1) 
+            switch (userChoice)
             {
-                if (alchemistDialogueStage == 0)
-                {
-                    Console.WriteLine("Мужчина медленно откладывает инструмент и смотрит на тебя.");
-                    Console.WriteLine("— Ты всё-таки добрался.");
-                    Pause();
-                    alchemistDialogueStage += 1;
-                }
-                else if (alchemistDialogueStage == 1)
-                {
-                    Console.WriteLine("- Судя по твоему взгляду, ты не помнишь меня?");
-                    Console.WriteLine("Мужчина едва заметно усмехается");
-                    Console.WriteLine("- Меня называют Алхимиком. Я хозяин этой башни и прилегающих территорий");
-                    Pause();
-                    alchemistDialogueStage++;
-                }
-                else if (alchemistDialogueStage == 2)
-                {
-                    Console.WriteLine("Алхимик замечает немой вопрос в твоих глазах.");
-                    Console.WriteLine("- Да, это я тот, кто запер тебя внизу");
-                    Pause();
-                    alchemistDialogueStage++;
-                }
-                else if (alchemistDialogueStage == 3)
-                {
-                    Console.WriteLine("- И как всегда, ненадолго.");
-                    Console.WriteLine("Алхимик медленно переводит взляд на механизм в глубине зала");
-                    Console.WriteLine("- Ты всегда находишь чертов путь сюда.");
-                    Pause();
-                    alchemistDialogueStage++;
-                }
-                else if (alchemistDialogueStage == 4)
-                {
-                    Console.WriteLine("- Думаешь, ты почти выбрался, вот она свобода? Только руку протяни.");
-                    Console.WriteLine("Алхимик смотрит на тебя почти с сожалением.");
-                    Console.WriteLine("- Но уверен ли ты, что имено её ты ищешь?");
-                    Pause();
-                    alchemistDialogueStage++;
-                }
-                else if (alchemistDialogueStage == 5)
-                {
-                    Console.WriteLine("- Я мог бы снова запереть тебя внизу.");
-                    Console.WriteLine("Алхимик ненадолго замолкает");
-                    Console.WriteLine("- Но есть ли в этом смысл? Я дам этот выбор тебе.");
-                    Pause();
-                    alchemistDialogueStage++;
-                }
-                else if (alchemistDialogueStage == 6)
-                {
-                    Console.WriteLine("- Выбор за тобой остаться здесь или сгнить в темнице.");
-                    Console.WriteLine("Алхимик отворачивается к механизму");
-                    Console.WriteLine("- Я не позволю еще раз обнулить мир...");
-                    Pause();
-                    alchemistDialogueStage++;
-                }
-                else if (alchemistDialogueStage == 7)
-                {
-                    Console.WriteLine("- Мне больше нечего тебе сказать...");
-                    Pause();
-                }
-
-            }
-            else if (userChoice == 2)
-            {
-                if (!weaknessFound)
-                {
-                    Console.WriteLine("Ты внимательно осматриваешь помещение. Прямо рядом с тобой находится установка, в которой пульсирует жидкость неизвестного происхождения.");
-                    Console.WriteLine("Одна колба вся покрыта трещинами, достаточно лишь чуть сильнее ударить по ней и весь цикл работы установки будет нарушен...");    
-                    weaknessFound = true;
-                    Pause();
-                }
-                else
-                {
-                    Console.WriteLine("Взгляд нервно мечется из стороны в сторону, но больше ничего, что могло бы тебе помочь, ты не замечаешь");
-                    Pause();
-                }
-                
-            }
-            else if (userChoice == 3)
-            {
-                if (alchemistDialogueStage >= 7)
-                {
-                    Console.Clear();
-                    TrueEnding();
-                    Pause();
+                case 0:
                     gameRunning = false;
-                }
-                else if (weaknessFound)
-                {
-                    Console.Clear();
-                    FalseEnding();
-                    Pause();
-                    gameRunning = false;
-                }
-                
-            }
+                    break;
 
-            else if (userChoice == 4)
+                case 1:
+                    TalkToAlchemist();
+                    break;
+
+                case 2:
+                    InspectMechanism();
+                    break;
+                case 3:
+                    if (dialogueCompleted)
+                    {
+                        StayWithAlchemist();
+                    }
+                    else
+                    {
+                        DestroyMechanism();
+                    }
+                    break;
+                case 4:
+                    DestroyMechanism();
+                    break;
+            }
+        }
+
+        private void TalkToAlchemist()
+        {
+            if (alchemistDialogueStage == 0)
             {
-                Console.Clear();
-                FalseEnding();
+                Console.WriteLine("Мужчина медленно откладывает инструмент и смотрит на тебя.");
+                Console.WriteLine("— Ты всё-таки добрался.");
                 Pause();
-                gameRunning = false;
+                alchemistDialogueStage += 1;
             }
+            else if (alchemistDialogueStage == 1)
+            {
+                Console.WriteLine("- Судя по твоему взгляду, ты не помнишь меня?");
+                Console.WriteLine("Мужчина едва заметно усмехается");
+                Console.WriteLine("- Меня называют Алхимиком. Я хозяин этой башни и прилегающих территорий");
+                Pause();
+                alchemistDialogueStage++;
+            }
+            else if (alchemistDialogueStage == 2)
+            {
+                Console.WriteLine("Алхимик замечает немой вопрос в твоих глазах.");
+                Console.WriteLine("- Да, это я тот, кто запер тебя внизу");
+                Pause();
+                alchemistDialogueStage++;
+            }
+            else if (alchemistDialogueStage == 3)
+            {
+                Console.WriteLine("- И как всегда, ненадолго.");
+                Console.WriteLine("Алхимик медленно переводит взляд на механизм в глубине зала");
+                Console.WriteLine("- Ты всегда находишь чертов путь сюда.");
+                Pause();
+                alchemistDialogueStage++;
+            }
+            else if (alchemistDialogueStage == 4)
+            {
+                Console.WriteLine("- Думаешь, ты почти выбрался, вот она свобода? Только руку протяни.");
+                Console.WriteLine("Алхимик смотрит на тебя почти с сожалением.");
+                Console.WriteLine("- Но уверен ли ты, что имено её ты ищешь?");
+                Pause();
+                alchemistDialogueStage++;
+            }
+            else if (alchemistDialogueStage == 5)
+            {
+                Console.WriteLine("- Я мог бы снова запереть тебя внизу.");
+                Console.WriteLine("Алхимик ненадолго замолкает");
+                Console.WriteLine("- Но есть ли в этом смысл? Я дам этот выбор тебе.");
+                Pause();
+                alchemistDialogueStage++;
+            }
+            else if (alchemistDialogueStage == 6)
+            {
+                Console.WriteLine("- Выбор за тобой остаться здесь или сгнить в темнице.");
+                Console.WriteLine("Алхимик отворачивается к механизму");
+                Console.WriteLine("- Я не позволю еще раз обнулить мир...");
+                Pause();
+                alchemistDialogueStage++;
+            }
+            else if (alchemistDialogueStage == 7)
+            {
+                Console.WriteLine("- Мне больше нечего тебе сказать...");
+                Pause();
+            }
+        }
+
+        private void InspectMechanism()
+        {
+            if (!weaknessFound)
+            {
+                Console.WriteLine("Ты внимательно осматриваешь помещение. Прямо рядом с тобой находится установка, в которой пульсирует жидкость неизвестного происхождения.");
+                Console.WriteLine("Одна колба вся покрыта трещинами, достаточно лишь чуть сильнее ударить по ней и весь цикл работы установки будет нарушен...");
+                weaknessFound = true;
+                Pause();
+            }
+            else
+            {
+                Console.WriteLine("Взгляд нервно мечется из стороны в сторону, но больше ничего, что могло бы тебе помочь, ты не замечаешь");
+                Pause();
+            }
+        }
+
+        private void StayWithAlchemist()
+        {
+            Console.Clear();
+            TrueEnding();
+            Pause();
+            gameRunning = false;
+        }
+
+        private void DestroyMechanism()
+        {
+            Console.Clear();
+            FalseEnding();
+            Pause();
+            gameRunning = false;
         }
 
         private int ReadChoice(int min, int max)
