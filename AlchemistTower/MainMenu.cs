@@ -3,33 +3,32 @@
     internal class MainMenu
     {
         private bool menuRunning;
-        private int ReadNumber(int min, int max)
-        {
-            while (true)
-            {
-                int num;
-                bool isInt = int.TryParse(Console.ReadLine(), out num);
-                if (!isInt) Console.WriteLine("Введите число!!!");
-                else if (num < min || num > max) Console.WriteLine("Выберите вариант из списка!");
-                else return num;
-            }
-        }
-
+        
         public void RunMenu()
         {
             menuRunning = true;
+
             while (menuRunning)
             {
+                Console.Clear();
                 ShowMenu();
+
                 int userChoice = ReadNumber(0, 3);
-                if (userChoice == 0)
-                    ExitMenu();
-                else if (userChoice == 1)
-                    StartGame();
-                else if (userChoice == 2)
-                    LoadGame();
-                else if (userChoice == 3)
-                    Credits();
+                switch (userChoice)
+                {
+                    case 0:
+                        ExitMenu();
+                        break;
+                    case 1:
+                        StartGame();
+                        break;
+                    case 2:
+                        LoadGame();
+                        break;
+                    case 3:
+                        ShowCredits();
+                        break;
+                }
             }
         }
 
@@ -51,29 +50,51 @@
 
         private void StartGame()
         {
-            Game game = new Game();
-            game.Start();
+            new Game().Start();
         }
 
-        private void Credits()
+        private void ShowCredits()
         {
+            Console.Clear();
+
             Console.WriteLine("Игру для вас сделали: ");
             Console.WriteLine();
             Console.WriteLine("Программист и сценарист - Reastraner");
-            Console.WriteLine();
             Console.WriteLine("Главный помощник - ChatGPT");
-            Console.WriteLine();
+            Pause();
+            
         }
 
         private void LoadGame()
         {
+            Console.Clear();
+
             Console.WriteLine("Функция в разработке...");
-            Console.WriteLine();
+            
+            Pause();
         }
 
         private void ExitMenu()
         {
             menuRunning = false;
-        } 
+        }
+
+        private int ReadNumber(int min, int max)
+        {
+            while (true)
+            {
+                bool isNumber = int.TryParse(Console.ReadLine(), out int number);
+                if (!isNumber) Console.WriteLine("Введите число!");
+                else if (number < min || number > max) Console.WriteLine("Выберите вариант из списка!");
+                else return number;
+            }
+        }
+
+        private void Pause()
+        {
+            Console.WriteLine();
+            Console.WriteLine("Нажмите любую клавишу...");
+            Console.ReadKey(true);
+        }
     }
 }

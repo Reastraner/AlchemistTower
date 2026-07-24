@@ -353,66 +353,57 @@
 
         private void TalkToAlchemist()
         {
-            if (alchemistDialogueStage == 0)
+            switch (alchemistDialogueStage)
             {
-                Console.WriteLine("Мужчина медленно откладывает инструмент и смотрит на тебя.");
-                Console.WriteLine("— Ты всё-таки добрался.");
-                Pause();
-                alchemistDialogueStage += 1;
+                case 0:
+                    Console.WriteLine("Мужчина медленно откладывает инструмент и смотрит на тебя.");
+                    Console.WriteLine("— Ты всё-таки добрался.");
+                    break;
+
+                case 1:
+                    Console.WriteLine("— Судя по твоему взгляду, ты не помнишь меня?");
+                    Console.WriteLine("Мужчина едва заметно усмехается.");
+                    Console.WriteLine("— Меня называют Алхимиком. Я хозяин этой башни и прилегающих территорий.");
+                    break;
+
+                case 2:
+                    Console.WriteLine("Алхимик замечает немой вопрос в твоих глазах.");
+                    Console.WriteLine("— Да, это я тот, кто запер тебя внизу.");
+                    break;
+
+                case 3:
+                    Console.WriteLine("— И как всегда, ненадолго.");
+                    Console.WriteLine("Алхимик медленно переводит взгляд на механизм в глубине зала.");
+                    Console.WriteLine("— Ты всегда находишь чёртов путь сюда.");
+                    break;
+
+                case 4:
+                    Console.WriteLine("— Думаешь, ты почти выбрался, вот она свобода? Только руку протяни.");
+                    Console.WriteLine("Алхимик смотрит на тебя почти с сожалением.");
+                    Console.WriteLine("— Но уверен ли ты, что именно её ты ищешь?");
+                    break;
+
+                case 5:
+                    Console.WriteLine("— Я мог бы снова запереть тебя внизу.");
+                    Console.WriteLine("Алхимик ненадолго замолкает.");
+                    Console.WriteLine("— Но есть ли в этом смысл? Я дам этот выбор тебе.");
+                    break;
+
+                case 6:
+                    Console.WriteLine("— Выбор за тобой: остаться здесь или сгнить в темнице.");
+                    Console.WriteLine("Алхимик отворачивается к механизму.");
+                    Console.WriteLine("— Я не позволю ещё раз обнулить мир...");
+                    break;
+
+                default:
+                    Console.WriteLine("— Мне больше нечего тебе сказать...");
+                    Pause();
+                    return;
             }
-            else if (alchemistDialogueStage == 1)
-            {
-                Console.WriteLine("- Судя по твоему взгляду, ты не помнишь меня?");
-                Console.WriteLine("Мужчина едва заметно усмехается");
-                Console.WriteLine("- Меня называют Алхимиком. Я хозяин этой башни и прилегающих территорий");
-                Pause();
-                alchemistDialogueStage++;
-            }
-            else if (alchemistDialogueStage == 2)
-            {
-                Console.WriteLine("Алхимик замечает немой вопрос в твоих глазах.");
-                Console.WriteLine("- Да, это я тот, кто запер тебя внизу");
-                Pause();
-                alchemistDialogueStage++;
-            }
-            else if (alchemistDialogueStage == 3)
-            {
-                Console.WriteLine("- И как всегда, ненадолго.");
-                Console.WriteLine("Алхимик медленно переводит взляд на механизм в глубине зала");
-                Console.WriteLine("- Ты всегда находишь чертов путь сюда.");
-                Pause();
-                alchemistDialogueStage++;
-            }
-            else if (alchemistDialogueStage == 4)
-            {
-                Console.WriteLine("- Думаешь, ты почти выбрался, вот она свобода? Только руку протяни.");
-                Console.WriteLine("Алхимик смотрит на тебя почти с сожалением.");
-                Console.WriteLine("- Но уверен ли ты, что имено её ты ищешь?");
-                Pause();
-                alchemistDialogueStage++;
-            }
-            else if (alchemistDialogueStage == 5)
-            {
-                Console.WriteLine("- Я мог бы снова запереть тебя внизу.");
-                Console.WriteLine("Алхимик ненадолго замолкает");
-                Console.WriteLine("- Но есть ли в этом смысл? Я дам этот выбор тебе.");
-                Pause();
-                alchemistDialogueStage++;
-            }
-            else if (alchemistDialogueStage == 6)
-            {
-                Console.WriteLine("- Выбор за тобой остаться здесь или сгнить в темнице.");
-                Console.WriteLine("Алхимик отворачивается к механизму");
-                Console.WriteLine("- Я не позволю еще раз обнулить мир...");
-                Pause();
-                alchemistDialogueStage++;
-            }
-            else if (alchemistDialogueStage == 7)
-            {
-                Console.WriteLine("- Мне больше нечего тебе сказать...");
-                Pause();
-            }
-        }
+
+            alchemistDialogueStage++;
+            Pause();
+        }        
 
         private void InspectMechanism()
         {
@@ -450,17 +441,27 @@
         {
             while (true) 
             {
-                int choice;
-                bool isInt = int.TryParse(Console.ReadLine(), out choice);
-                if (!isInt) Console.WriteLine("Введите число!");
-                else if(choice == 9)
+                bool isInt = int.TryParse(Console.ReadLine(), out int choice);
+                if (!isInt)
+                {
+                    Console.WriteLine("Введите число!");
+                }
+
+                else if (choice == 9)
                 {
                     player.Inventory.ShowInventory();
                     Pause();
-                    continue;
                 }
-                else if (choice < min || choice > max) Console.WriteLine("Выберите вариант из списка!");
-                else return choice;
+
+                else if (choice < min || choice > max)
+                {
+                    Console.WriteLine("Выберите вариант из списка!");
+                }
+
+                else
+                {
+                    return choice;
+                }
             }
         }
 
